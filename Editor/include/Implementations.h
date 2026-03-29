@@ -13,10 +13,10 @@ using WindowImpl = Catalyst::OpenGL::OpenGLWindow;
 #include "IWindow.h"
 namespace Catalyst
 {
-	class WindowImpl : public IWindow
+	class InvalidWindow : public IWindow
 	{
 	public:
-		EmptyWindow(const char* title, float width, float height)
+		InvalidWindow(const char* title, float width, float height)
 			: IWindow{ title, width, height } { }
 
 		virtual bool Open() override{ return false; }
@@ -28,4 +28,6 @@ namespace Catalyst
 		virtual void EndFrame() override {}
 	};
 }
+
+using WindowImpl = Catalyst::InvalidWindow;
 #endif
