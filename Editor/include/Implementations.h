@@ -16,7 +16,7 @@ namespace Catalyst
 	class WindowImpl : public IWindow
 	{
 	public:
-		EmptyWindow(const char* title, float width, float height)
+		WindowImpl(const char* title, float width, float height)
 			: IWindow{ title, width, height } { }
 
 		virtual bool Open() override{ return false; }
