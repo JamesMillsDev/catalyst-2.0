@@ -1,0 +1,50 @@
+/*****************************************************************************
+ * Application
+ * Created by James Mills on 29/03/2026.
+ *****************************************************************************/
+
+#include "Application.h"
+
+namespace Catalyst
+{
+	Application const* Application::Instance()
+	{
+		return m_instance;
+	}
+
+	Application* Application::m_instance = nullptr;
+
+	Application::Application()
+		: m_window{ nullptr }
+	{
+		m_instance = this;
+	}
+
+	Application::~Application()
+	{
+		delete m_window;
+		m_window = nullptr;
+	}
+
+	int Application::Process()
+	{
+		if (!m_window->Open())
+		{
+			return WINDOW_FAILED_TO_OPEN;
+		}
+
+		while (m_window->IsOpen())
+		{
+			if (!m_window->BeginFrame())
+			{
+				continue;
+			}
+
+			m_window->EndFrame();
+		}
+
+		m_window->Close();
+
+		return SUCCESS;
+	}
+}
