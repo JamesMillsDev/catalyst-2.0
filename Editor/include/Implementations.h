@@ -7,10 +7,13 @@
 
 #ifdef USE_OPEN_GL
 #include <OpenGLWindow.h>
+#include <Graphics/OpenGlRenderer.h>
 
 using WindowImpl = Catalyst::OpenGL::OpenGLWindow;
+using RendererImpl = Catalyst::Graphics::OpenGL::OpenGlRenderer;
 #else
 #include "IWindow.h"
+#include "Graphics/IRenderer.h"
 namespace Catalyst
 {
 	class InvalidWindow : public IWindow
@@ -27,7 +30,18 @@ namespace Catalyst
 
 		virtual void EndFrame() override {}
 	};
+
+	namespace Graphics
+	{
+		class InvalidRenderer : public IRenderer
+		{
+		public:
+			virtual void RenderMesh(IMesh* mesh) override{}
+
+		};
+	}
 }
 
 using WindowImpl = Catalyst::InvalidWindow;
+using RendererImpl = Catalyst::Graphics::InvalidRenderer;
 #endif

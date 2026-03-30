@@ -4,9 +4,17 @@
 *****************************************************************************/
 #pragma once
 
-#include "catalyst_export.h"
-
 namespace Catalyst::Graphics
 {
-	class IRenderer { };
+	class IMesh;
+
+	class IRenderer
+	{
+	public:
+		virtual ~IRenderer() = default;
+
+	public:
+		virtual void RenderMesh(IMesh* mesh) = 0;
+
+	};
 }

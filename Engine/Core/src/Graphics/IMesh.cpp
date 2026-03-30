@@ -2,6 +2,8 @@
 
 #include <utility>
 
+#include "Graphics/IRenderer.h"
+
 namespace Catalyst::Graphics
 {
 	IMesh::IMesh(string name)
@@ -13,6 +15,6 @@ namespace Catalyst::Graphics
 
 	void IMesh::Render(IRenderer* renderer)
 	{
-
+		renderer->RenderMesh(this);
 	}
 }

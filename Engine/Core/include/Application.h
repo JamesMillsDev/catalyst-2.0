@@ -7,16 +7,19 @@
 
 #include "catalyst_export.h"
 #include "IWindow.h"
+#include "Graphics/IRenderer.h"
 
 #include "Utility/ExitCodes.h"
 #include "Utility/TemplateConstraints.h"
 
 namespace Catalyst
 {
+	using Graphics::IRenderer;
+
 	class CATALYST_EXPORT Application
 	{
 	public:
-		template<Derived<IWindow> WINDOW>
+		template<Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER>
 		static int Run(const char* title, float w, float h);
 
 		static Application const* Instance();
@@ -26,6 +29,7 @@ namespace Catalyst
 
 	private:
 		IWindow* m_window;
+		IRenderer* m_renderer;
 
 	private:
 		Application();
@@ -36,7 +40,7 @@ namespace Catalyst
 
 	};
 
-	template<Derived<IWindow> WINDOW>
+	template<Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER>
 	int Application::Run(const char* title, float w, float h)
 	{
 		if (m_instance != nullptr)
@@ -46,6 +50,7 @@ namespace Catalyst
 
 		m_instance = new Application;
 		m_instance->m_window = new WINDOW{ title, w, h };
+		m_instance->m_renderer = new RENDERER;
 
 		const int retCode = m_instance->Process();
 		delete m_instance;

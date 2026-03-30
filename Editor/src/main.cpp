@@ -8,5 +8,5 @@
 
 int main()
 {
-	return Catalyst::Application::Run<WindowImpl>("Catalyst", 1920.f, 1080.f);
+	return Catalyst::Application::Run<WindowImpl, RendererImpl>("Catalyst", 1920.f, 1080.f);
 }
