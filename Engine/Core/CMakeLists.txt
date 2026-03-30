@@ -1,17 +1,30 @@
+include(FetchContent)
+include(GenerateExportHeader)
+
 file(GLOB_RECURSE CATALYST_SOURCES CONFIGURE_DEPENDS
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
         "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
 )
 
+FetchContent_Declare(
+        assimp
+        GIT_REPOSITORY https://github.com/assimp/assimp.git
+        GIT_TAG v6.0.4
+)
+set(ASSIMP_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(assimp)
+
 add_library(Catalyst SHARED ${CATALYST_SOURCES})
 
-include(GenerateExportHeader)
 generate_export_header(Catalyst
         EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/catalyst_export.h
 )
 
 target_link_libraries(Catalyst
         PUBLIC Catalyst_Maths
+        PUBLIC assimp
 )
 
 target_include_directories(Catalyst
