@@ -12,6 +12,11 @@ namespace Catalyst
 		return m_instance;
 	}
 
+	IWindow const* Application::GetWindow() const
+	{
+		return m_window;
+	}
+
 	Application* Application::m_instance = nullptr;
 
 	Application::Application()

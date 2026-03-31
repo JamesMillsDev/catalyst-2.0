@@ -29,6 +29,10 @@ namespace Catalyst
 
 		bool IsOpen() const;
 
+		float Width() const;
+
+		float Height() const;
+
 	protected:
 		char* m_title;
 		float m_width;

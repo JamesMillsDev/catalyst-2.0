@@ -24,6 +24,9 @@ namespace Catalyst
 
 		static Application const* Instance();
 
+	public:
+		IWindow const* GetWindow() const;
+
 	private:
 		static Application* m_instance;
 

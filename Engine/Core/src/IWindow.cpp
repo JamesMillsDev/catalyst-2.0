@@ -31,4 +31,14 @@ namespace Catalyst
 	{
 		return !m_shouldClose;
 	}
+
+	float IWindow::Width() const
+	{
+		return m_width;
+	}
+
+	float IWindow::Height() const
+	{
+		return m_height;
+	}
 }
