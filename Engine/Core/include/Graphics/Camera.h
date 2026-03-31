@@ -22,6 +22,7 @@ namespace Catalyst
 			virtual ~Camera();
 
 		public:
+			Matrix4& View();
 			[[nodiscard]] float Fov() const;
 
 			Matrix4 ProjectTransform(const Matrix4& transform);

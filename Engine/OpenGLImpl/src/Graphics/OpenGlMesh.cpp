@@ -11,12 +11,12 @@
 
 namespace Catalyst::Graphics::OpenGL
 {
-	OpenGlMesh::OpenGlMesh(const string& name)
-		: IMesh{ name }, m_triCount{ 0 }, m_vao{ 0 }, m_vbo{ 0 }, m_ibo{ 0 } { }
+	OpenGlMesh::OpenGlMesh()
+		: m_triCount{ 0 }, m_vao{ 0 }, m_vbo{ 0 }, m_ibo{ 0 } { }
 
 	OpenGlMesh::OpenGlMesh(const OpenGlMesh& other) = default;
 
-	void OpenGlMesh::Initialise(uint32 vertexCount, const Vertex* vertices, uint32 indexCount,
+	void OpenGlMesh::Initialise(const uint32 vertexCount, const Vertex* vertices, const uint32 indexCount,
 	                            const uint32* indices)
 	{
 		assert(m_vao == 0);
@@ -47,7 +47,6 @@ namespace Catalyst::Graphics::OpenGL
 		// Enable the third-tenth elements as the uvs
 		for (uint32 i = 0; i < MAX_TEXTURE_COORDS; i++)
 		{
-			const uint32 index = i;
 			glEnableVertexAttribArray(id);
 			glVertexAttribPointer(id++, 2, GL_FLOAT, GL_FALSE, static_cast<long long>(sizeof(Vertex)),
 			                      reinterpret_cast<void*>(offsetof(Vertex, uvs) + sizeof(float) * 2 * i));
@@ -62,7 +61,7 @@ namespace Catalyst::Graphics::OpenGL
 
 			// Enable the twelfth element as the bit tangent
 			glEnableVertexAttribArray(id);
-			glVertexAttribPointer(id++, 4, GL_FLOAT, GL_TRUE, static_cast<long long>(sizeof(Vertex)),
+			glVertexAttribPointer(id, 4, GL_FLOAT, GL_TRUE, static_cast<long long>(sizeof(Vertex)),
 			                      reinterpret_cast<void*>(offsetof(Vertex, biTangent)));
 		}
 

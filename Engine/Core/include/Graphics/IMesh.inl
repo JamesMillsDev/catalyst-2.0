@@ -16,7 +16,8 @@ namespace Catalyst::Graphics
 	template<Derived<IMesh> MESH>
 	MESH* IMesh::MakeQuad()
 	{
-		MESH* mesh = new MESH{ "Quad" };
+		MESH* mesh = new MESH;
+		mesh->name = "Quad";
 
 		// Define the 6 vertices for our two triangles to make a quad,
 		// in a counter-clockwise direction.
@@ -75,7 +76,8 @@ namespace Catalyst::Graphics
 	template<Derived<IMesh> MESH>
 	MESH* IMesh::MakeFromAssimp(const aiMesh* mesh, const bool flipV)
 	{
-		MESH* newMesh = new MESH{ mesh->mName };
+		MESH* newMesh = new MESH;
+		newMesh->name = mesh->mName.C_Str();
 
 		vector<Vertex> vertices;
 		vector<uint32> indices;
@@ -130,7 +132,7 @@ namespace Catalyst::Graphics
 
 		newMesh->Initialise(static_cast<uint32>(vertices.size()), vertices.data(), static_cast<uint32>(indices.size()),
 		                    indices.data());
-		return mesh;
+		return newMesh;
 	}
 }
 #endif

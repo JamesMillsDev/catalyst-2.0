@@ -27,6 +27,11 @@ namespace Catalyst::Graphics
 
 	Camera::~Camera() = default;
 
+	Matrix4& Camera::View()
+	{
+		return m_view;
+	}
+
 	float Camera::Fov() const
 	{
 		return CatalystMath::Radians(m_fovAngle);

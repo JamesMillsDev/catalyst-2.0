@@ -6,8 +6,7 @@
 
 namespace Catalyst::Graphics
 {
-	IMesh::IMesh(string name)
-		: name{ std::move(name) } { }
+	IMesh::IMesh() = default;
 
 	IMesh::IMesh(const IMesh& other) = default;
 

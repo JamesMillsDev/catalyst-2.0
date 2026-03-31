@@ -6,7 +6,9 @@
 #pragma once
 
 #include "catalyst_export.h"
+#include "IGameInstance.h"
 #include "IWindow.h"
+
 #include "Graphics/IRenderer.h"
 
 #include "Utility/ExitCodes.h"
@@ -19,7 +21,7 @@ namespace Catalyst
 	class CATALYST_EXPORT Application
 	{
 	public:
-		template<Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER>
+		template<Derived<IGameInstance> GAME, Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER>
 		static int Run(const char* title, float w, float h);
 
 		static Application const* Instance();
@@ -33,6 +35,7 @@ namespace Catalyst
 	private:
 		IWindow* m_window;
 		IRenderer* m_renderer;
+		IGameInstance* m_gameInstance;
 
 	private:
 		Application();
@@ -43,7 +46,7 @@ namespace Catalyst
 
 	};
 
-	template<Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER>
+	template<Derived<IGameInstance> GAME, Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER>
 	int Application::Run(const char* title, float w, float h)
 	{
 		if (m_instance != nullptr)
@@ -54,6 +57,7 @@ namespace Catalyst
 		m_instance = new Application;
 		m_instance->m_window = new WINDOW{ title, w, h };
 		m_instance->m_renderer = new RENDERER;
+		m_instance->m_gameInstance = new GAME;
 
 		const int retCode = m_instance->Process();
 		delete m_instance;

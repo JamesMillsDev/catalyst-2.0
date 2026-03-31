@@ -16,11 +16,11 @@ namespace Catalyst::Graphics::OpenGL
 		friend class OpenGlRenderer;
 
 	public:
-		explicit OpenGlMesh(const string& name);
+		OpenGlMesh();
 
 		OpenGlMesh(const OpenGlMesh& other);
 
-	protected:
+	public:
 		virtual void Initialise(uint32 vertexCount, const Vertex* vertices, uint32 indexCount,
 		                        const uint32* indices) override;
 

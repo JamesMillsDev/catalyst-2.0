@@ -64,7 +64,7 @@ namespace Catalyst::Graphics
 		string name;
 
 	public:
-		explicit IMesh(string  name);
+		IMesh();
 
 		IMesh(const IMesh& other);
 
@@ -73,9 +73,8 @@ namespace Catalyst::Graphics
 	public:
 		virtual void Render(IRenderer* renderer);
 
-	protected:
 		virtual void Initialise(uint32 vertexCount, const Vertex* vertices, uint32 indexCount = 0,
-		                        const uint32* indices = nullptr) = 0;
+		                        const uint32* indices                                         = nullptr) = 0;
 	};
 }
 
