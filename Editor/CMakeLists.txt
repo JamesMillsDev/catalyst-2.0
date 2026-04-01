@@ -21,6 +21,12 @@ add_custom_command(TARGET Catalyst_Editor POST_BUILD
         $<TARGET_FILE_DIR:Catalyst_Editor>
 )
 
+add_custom_command(TARGET Catalyst_Editor POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/TestProject"
+        "$<TARGET_FILE_DIR:Catalyst_Editor>/TestProject"
+)
+
 if(USE_OPENGL)
 
     add_custom_command(TARGET Catalyst_Editor POST_BUILD

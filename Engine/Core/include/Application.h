@@ -34,8 +34,8 @@ namespace Catalyst
 
 	private:
 		IWindow* m_window;
-		IRenderer* m_renderer;
-		IGameInstance* m_gameInstance;
+		IRenderer* m_renderer{};
+		IGameInstance* m_gameInstance{};
 
 	private:
 		Application();
@@ -57,7 +57,10 @@ namespace Catalyst
 		m_instance = new Application;
 		m_instance->m_window = new WINDOW{ title, w, h };
 		m_instance->m_renderer = new RENDERER;
+
 		m_instance->m_gameInstance = new GAME;
+		m_instance->m_gameInstance->m_window = m_instance->m_window;
+		m_instance->m_gameInstance->m_renderer = m_instance->m_renderer;
 
 		const int retCode = m_instance->Process();
 		delete m_instance;

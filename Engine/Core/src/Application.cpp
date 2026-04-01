@@ -20,13 +20,19 @@ namespace Catalyst
 	Application* Application::m_instance = nullptr;
 
 	Application::Application()
-		: m_window{ nullptr }
+		: m_window{ nullptr }, m_renderer{ nullptr }, m_gameInstance{ nullptr }
 	{
 		m_instance = this;
 	}
 
 	Application::~Application()
 	{
+		delete m_gameInstance;
+		m_gameInstance = nullptr;
+
+		delete m_renderer;
+		m_renderer = nullptr;
+
 		delete m_window;
 		m_window = nullptr;
 	}
@@ -38,6 +44,8 @@ namespace Catalyst
 			return WINDOW_FAILED_TO_OPEN;
 		}
 
+		m_gameInstance->Initialise();
+
 		while (m_window->IsOpen())
 		{
 			if (!m_window->BeginFrame())
@@ -45,8 +53,13 @@ namespace Catalyst
 				continue;
 			}
 
+			m_gameInstance->Tick();
+			m_gameInstance->Render();
+
 			m_window->EndFrame();
 		}
+
+		m_gameInstance->Shutdown();
 
 		m_window->Close();
 

@@ -113,6 +113,8 @@ namespace Catalyst::Graphics
 					vert.uvs[i] = { uv.x, flipV ? -uv.y : uv.y };
 				}
 			}
+
+			vertices.emplace_back(vert);
 		}
 
 		for (uint32 i = 0; i < mesh->mNumFaces; ++i)

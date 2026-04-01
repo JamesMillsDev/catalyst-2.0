@@ -1,13 +1,11 @@
 ﻿#include "EditorGameInstance.h"
 
+#include <assimp/cimport.h>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
+
 #include "Implementations.h"
 #include "Vector3.h"
-
-#include "../../cmake-build-release-opengl/_deps/assimp-src/include/assimp/cimport.h"
-
-#include "assimp/postprocess.h"
-#include "assimp/scene.h"
-
 #include "Graphics/Camera.h"
 
 using Catalyst::Math::Vector3;
@@ -30,7 +28,7 @@ namespace Catalyst::Editor
 			{ 0.f, 1.f, -10.f }, { -30.f, 0.f, 0.f }, { 1.f }
 		);
 
-		const aiScene* loaded = aiImportFile("", aiProcess_CalcTangentSpace );
+		const aiScene* loaded = aiImportFile("TestProject\\Content\\Models\\SM_Soulspear.fbx", aiProcess_CalcTangentSpace);
 		m_testMesh = IMesh::MakeFromAssimp<MeshImpl>(loaded->mMeshes[0]);
 	}
 
@@ -38,7 +36,7 @@ namespace Catalyst::Editor
 
 	void EditorGameInstance::Render()
 	{
-
+		m_testMesh->Render(const_cast<IRenderer*>(m_renderer));
 	}
 
 	void EditorGameInstance::Shutdown() { }
