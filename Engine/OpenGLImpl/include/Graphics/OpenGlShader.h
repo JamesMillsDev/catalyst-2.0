@@ -12,11 +12,11 @@ namespace Catalyst::Graphics::OpenGL
 		enum EShaderStage : uint8
 		{
 			Undefined = 0,
+			Fragment,
 			Vertex,
+			Geometry,
 			TessellationEvaluation,
 			TessellationControl,
-			Geometry,
-			Fragment,
 			ShaderStageCount
 		};
 

@@ -19,7 +19,7 @@ namespace Catalyst
 
 	protected:
 		IWindow const* m_window;
-		IRenderer const* m_renderer;
+		IRenderer* m_renderer;
 
 	protected:
 		IGameInstance();

@@ -8,10 +8,12 @@ namespace Catalyst
 	{
 		class Camera;
 		class IMesh;
+		class IShader;
 	}
 
 	using Graphics::Camera;
 	using Graphics::IMesh;
+	using Graphics::IShader;
 
 	namespace Editor
 	{
@@ -33,6 +35,7 @@ namespace Catalyst
 		private:
 			Camera* m_camera;
 			IMesh* m_testMesh;
+			IShader* m_testShader;
 
 		};
 	}

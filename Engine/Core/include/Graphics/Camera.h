@@ -25,8 +25,8 @@ namespace Catalyst
 			Matrix4& View();
 			[[nodiscard]] float Fov() const;
 
-			Matrix4 ProjectTransform(const Matrix4& transform);
-			Matrix4 ProjectionView();
+			Matrix4 ProjectTransform(const Matrix4& transform) const;
+			Matrix4 Projection() const;
 
 			void SetFovAngle(float fovAngle);
 			[[nodiscard]] float GetFovAngle() const;

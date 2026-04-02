@@ -37,16 +37,14 @@ namespace Catalyst::Graphics
 		return CatalystMath::Radians(m_fovAngle);
 	}
 
-	Matrix4 Camera::ProjectTransform(const Matrix4& transform)
+	Matrix4 Camera::ProjectTransform(const Matrix4& transform) const
 	{
-		return ProjectionView() * transform;
+		return Projection() * transform;
 	}
 
-	Matrix4 Camera::ProjectionView()
+	Matrix4 Camera::Projection() const
 	{
-		m_projection = Matrix4::MakePerspective(Fov(), Aspect(), m_nearPlane, m_farPlane);
-
-		return m_projection * m_view;
+		return Matrix4::MakePerspective(Fov(), Aspect(), m_nearPlane, m_farPlane);
 	}
 
 	void Camera::SetFovAngle(const float fovAngle)

@@ -39,12 +39,12 @@ namespace Catalyst::Math
 
 	float CatalystMath::Degrees(const float radians)
 	{
-		return radians * Pi() * 2.f / 360.f;
+		return radians * 180.f / Pi();
 	}
 
 	float CatalystMath::Radians(const float degrees)
 	{
-		return degrees * 1.f / Pi();
+		return degrees * Pi() / 180.f;
 	}
 
 	float CatalystMath::Sin(const float f)

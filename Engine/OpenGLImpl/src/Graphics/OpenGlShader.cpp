@@ -51,7 +51,7 @@ namespace Catalyst::Graphics::OpenGL
 			string line;
 			while (std::getline(file, line))
 			{
-				source += line;
+				source += line + '\n';
 			}
 		}
 
@@ -138,17 +138,16 @@ namespace Catalyst::Graphics::OpenGL
 	{
 		vector<SubShader*> subShaders;
 
-		EShaderStage stage = Vertex;
+		EShaderStage stage = Fragment;
 		for (const string& extension : Extensions())
 		{
-			if (fs::path path{ Path() + extension }; fs::exists(path))
+			if (fs::path path{ Path() + "." + extension }; fs::exists(path))
 			{
 				SubShader* shader = new SubShader{ stage, path.string() };
 				shader->Create(shader->LoadSource());
 				subShaders.emplace_back(shader);
-
-				stage = static_cast<EShaderStage>(static_cast<uint8>(stage) + 1);
 			}
+			stage = static_cast<EShaderStage>(static_cast<uint8>(stage) + 1);
 		}
 
 		for (SubShader* shader : subShaders)
