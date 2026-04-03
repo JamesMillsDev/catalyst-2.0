@@ -1,8 +1,8 @@
 ﻿#include "EditorGameInstance.h"
 
-#include <assimp/cimport.h>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
+#include <assimp/Importer.hpp>      // C++ importer interface
+#include <assimp/postprocess.h>     // Post processing flags
+#include <assimp/scene.h>           // Output data structure
 
 #include "Implementations.h"
 #include "Vector3.h"
@@ -23,12 +23,16 @@ namespace Catalyst::Editor
 
 	void EditorGameInstance::Initialise()
 	{
-		m_camera->View() = Matrix4::MakeTransform({ 0.f, 0.f, 10.f }, { 0.f, 0.f, 0.f }, { 1.f });
+		m_camera->View() = Matrix4::MakeTransform({ 0.f, 0.f, -10.f }, { 0.f, 0.f, 0.f }, { 1.f });
 		m_renderer->SetCamera(m_camera);
 
-		const aiScene* loaded = aiImportFile(R"(TestProject\Content\Models\SM_Soulspear.fbx)",
-		                                     aiProcess_CalcTangentSpace | aiProcess_GlobalScale);
-		m_testMesh = IMesh::MakeFromAssimp<MeshImpl>(loaded->mMeshes[0]);
+		Assimp::Importer importer;
+		const aiScene* scene = importer.ReadFile(R"(TestProject\Content\Models\SM_Soulspear.fbx)", aiProcess_CalcTangentSpace |
+			aiProcess_Triangulate |
+			aiProcess_JoinIdenticalVertices |
+			aiProcess_SortByPType);
+
+		m_testMesh = IMesh::MakeFromAssimp<MeshImpl>(scene->mMeshes[0]);
 
 		m_testShader = new ShaderImpl{ R"(TestProject\Content\Shaders\test)" };
 		m_testShader->Load();
