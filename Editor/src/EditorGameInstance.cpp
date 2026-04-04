@@ -51,7 +51,16 @@ namespace Catalyst::Editor
 		m_testShader->Bind(nullptr);
 		m_renderer->SetProjectionViewMatrix(m_testShader);
 		m_testShader->Set("model", Matrix4::Identity());
-		m_testShader->Set("lightDirection", Vector3{ CatalystMath::Cos(time * 2.f), CatalystMath::Sin(time * 2.f), 0.f });
+		m_testShader->Set("light.color", Vector3{ 1.f, 1.f, 0.f });
+		m_testShader->Set("light.direction", Vector3{ CatalystMath::Cos(time * 2.f), CatalystMath::Sin(time * 2.f), 0.f });
+		m_testShader->Set("ambientLight", Vector3{ .25f, .25f, .25f });
+
+		m_testShader->Set("material.ambientColor", Vector3{ 0.f });
+		m_testShader->Set("material.diffuseColor", Vector3{ .8f });
+		m_testShader->Set("material.specularColor", Vector3{ .5f });
+		m_testShader->Set("material.specularPower", 20.f);
+
+		m_testShader->Set("cameraLocation", m_camera->View().Translation());
 
 		m_testMesh->Render(m_renderer);
 		m_testShader->Unbind(nullptr);
