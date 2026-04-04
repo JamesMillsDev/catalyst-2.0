@@ -5,6 +5,7 @@
 #include <assimp/scene.h>           // Output data structure
 
 #include "CatalystMath.h"
+#include "GameTime.h"
 #include "Implementations.h"
 #include "Vector3.h"
 
@@ -45,10 +46,12 @@ namespace Catalyst::Editor
 
 	void EditorGameInstance::Render()
 	{
+		float time = GameTime::AppTime();
+
 		m_testShader->Bind(nullptr);
 		m_renderer->SetProjectionViewMatrix(m_testShader);
 		m_testShader->Set("model", Matrix4::Identity());
-		m_testShader->Set("lightDirection", Vector3{  });
+		m_testShader->Set("lightDirection", Vector3{ CatalystMath::Cos(time * 2.f), CatalystMath::Sin(time * 2.f), 0.f });
 
 		m_testMesh->Render(m_renderer);
 		m_testShader->Unbind(nullptr);

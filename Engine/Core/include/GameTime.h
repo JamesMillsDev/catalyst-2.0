@@ -9,6 +9,8 @@
 
 #include "catalyst_export.h"
 
+#include "Utility/Typedefs.h"
+
 using std::chrono::steady_clock;
 
 namespace Catalyst

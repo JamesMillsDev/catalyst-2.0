@@ -5,6 +5,8 @@
 
 #include "Application.h"
 
+#include "GameTime.h"
+
 namespace Catalyst
 {
 	Application const* Application::Instance()
@@ -44,10 +46,14 @@ namespace Catalyst
 			return WINDOW_FAILED_TO_OPEN;
 		}
 
+		GameTime::Init();
+
 		m_gameInstance->Initialise();
 
 		while (m_window->IsOpen())
 		{
+			GameTime::Tick();
+
 			if (!m_window->BeginFrame())
 			{
 				continue;

@@ -34,8 +34,8 @@ namespace Catalyst
 
 	private:
 		IWindow* m_window;
-		IRenderer* m_renderer{};
-		IGameInstance* m_gameInstance{};
+		IRenderer* m_renderer;
+		IGameInstance* m_gameInstance;
 
 	private:
 		Application();
