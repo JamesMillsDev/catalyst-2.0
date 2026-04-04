@@ -4,10 +4,13 @@
 #include <assimp/postprocess.h>     // Post processing flags
 #include <assimp/scene.h>           // Output data structure
 
+#include "CatalystMath.h"
 #include "Implementations.h"
 #include "Vector3.h"
+
 #include "Graphics/Camera.h"
 
+using Catalyst::Math::CatalystMath;
 using Catalyst::Math::Vector3;
 
 namespace Catalyst::Editor
@@ -45,6 +48,7 @@ namespace Catalyst::Editor
 		m_testShader->Bind(nullptr);
 		m_renderer->SetProjectionViewMatrix(m_testShader);
 		m_testShader->Set("model", Matrix4::Identity());
+		m_testShader->Set("lightDirection", Vector3{  });
 
 		m_testMesh->Render(m_renderer);
 		m_testShader->Unbind(nullptr);
