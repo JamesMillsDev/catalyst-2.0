@@ -7,27 +7,31 @@
 
 #ifdef USE_OPEN_GL
 #include <OpenGLWindow.h>
+
 #include <Graphics/OpenGlMesh.h>
 #include <Graphics/OpenGlRenderer.h>
 #include <Graphics/OpenGlShader.h>
+#include <Graphics/OpenGlTexture.h>
 
-using WindowImpl   = Catalyst::OpenGL::OpenGLWindow;
+using WindowImpl = Catalyst::OpenGL::OpenGLWindow;
 using RendererImpl = Catalyst::Graphics::OpenGL::OpenGlRenderer;
-using MeshImpl     = Catalyst::Graphics::OpenGL::OpenGlMesh;
-using ShaderImpl   = Catalyst::Graphics::OpenGL::OpenGlShader;
+using MeshImpl = Catalyst::Graphics::OpenGL::OpenGlMesh;
+using ShaderImpl = Catalyst::Graphics::OpenGL::OpenGlShader;
+using TextureImpl = Catalyst::Graphics::OpenGL::OpenGlTexture;
 #else
 #include "IWindow.h"
 #include "Graphics/IMesh.h"
 #include "Graphics/IRenderer.h"
 #include "Graphics/IShader.h"
+#include "Graphics/ITexture.h"
 
 namespace Catalyst
 {
 	class InvalidWindow : public IWindow
 	{
 	public:
-		InvalidWindow(const char* title, float width, float height)
-			: IWindow{ title, width, height } { }
+		InvalidWindow(const char* title, float width, float height) :
+			IWindow{ title, width, height } { }
 
 		virtual bool Open() override
 		{
@@ -67,8 +71,8 @@ namespace Catalyst
 		class InvalidShader : public IShader
 		{
 		public:
-			explicit InvalidShader(const string& path)
-				: IShader{ path } { }
+			explicit InvalidShader(const string& path) :
+				IShader{ path } { }
 
 			virtual bool Load() override
 			{
@@ -113,11 +117,32 @@ namespace Catalyst
 				return { };
 			}
 		};
+
+		class InvalidTexture : public ITexture
+		{
+		public:
+			InvalidTexture() = default;
+
+			explicit InvalidTexture(const string& fileName) :
+				ITexture{ fileName } { }
+
+			InvalidTexture(const uint32 width, const uint32 height, const ETextureFormat format) :
+				ITexture{ width, height, format } { }
+
+		public:
+			bool Load(const string& fileName) override
+			{
+				return false;
+			}
+
+			void Create(unsigned width, unsigned height, ETextureFormat format, uint8* pixels) override { }
+			void Bind(uint32 slot) const override { }
+		};
 	}
 }
 
-using WindowImpl   = Catalyst::InvalidWindow;
+using WindowImpl = Catalyst::InvalidWindow;
 using RendererImpl = Catalyst::Graphics::InvalidRenderer;
-using MeshImpl     = Catalyst::Graphics::InvalidMesh;
-using ShaderImpl   = Catalyst::Graphics::InvalidShader;
+using MeshImpl = Catalyst::Graphics::InvalidMesh;
+using ShaderImpl = Catalyst::Graphics::InvalidShader;
 #endif

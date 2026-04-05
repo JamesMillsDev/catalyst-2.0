@@ -100,8 +100,8 @@ namespace Catalyst::Graphics
 				aiVector3D tangent = mesh->mTangents[v];
 				aiVector3D biTangent = mesh->mBitangents[v];
 
-				vert.tangent = { tangent.x, tangent.y, tangent.z, 0.f };
-				vert.biTangent = { biTangent.x, biTangent.y, biTangent.z, 0.f };
+				vert.tangent = { tangent.x, tangent.y, tangent.z, 1.f };
+				vert.biTangent = { biTangent.x, biTangent.y, biTangent.z, 1.f };
 				vert.hasTangents = true;
 			}
 

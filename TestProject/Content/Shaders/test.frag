@@ -20,31 +20,48 @@ uniform vec3 ambientLight;
 
 uniform vec3 cameraLocation;
 
-in vec4 vLocation;
-in vec3 vNormal;
+uniform sampler2D baseColorTex;
+uniform sampler2D normalTex;
+// uniform sampler2D ormTex;
+
+in VS_OUT
+{
+    vec4 location;
+    vec3 normal;
+    vec2 uv0;
+    vec3 tangent;
+    vec3 biTangent;
+    mat3 TBN;
+} fs_in;
 
 out vec4 fragColor;
 
 void main()
 {
-    // Ensure normal and light direction are normalised
-    vec3 N = normalize(vNormal);
+    // Sample textures
+    vec3 texBaseColor = texture(baseColorTex, fs_in.uv0).rgb;
+    vec3 texNormal = texture(normalTex, fs_in.uv0).rgb;
+
+    // Ensure vectors are normalized
+    vec3 T = normalize(fs_in.tangent);
+    vec3 B = normalize(fs_in.biTangent);
+    vec3 N = fs_in.TBN * (texNormal * 2 - 1);
     vec3 L = normalize(light.direction);
 
     // Calculate lambert term (negate light direction)
     float lambertTerm = max(0, min(1, dot(N, -L)));
 
     // Calculate view and reflection vector
-    vec3 V = normalize(cameraLocation - vLocation.xyz);
+    vec3 V = normalize(cameraLocation - fs_in.location.xyz);
     vec3 R = reflect(L, N);
 
     // Calculate specular term
     float specularTerm = pow(max(0, dot(R, V)), material.specularPower);
 
     // Calculate colour properties
-    vec3 diffuse = light.color * material.diffuseColor * lambertTerm;
-    vec3 ambient = ambientLight * material.ambientColor;
+    vec3 diffuse = light.color * material.diffuseColor * lambertTerm * texBaseColor;
+    vec3 ambient = ambientLight * material.ambientColor * texBaseColor;
     vec3 specular = light.color * material.specularColor * specularTerm;
 
-    fragColor = vec4(ambient + diffuse + specular, 1);
+    fragColor = vec4(diffuse + ambient + specular, 1);
 }

@@ -16,6 +16,15 @@ set(ASSIMP_BUILD_SHARED_LIBS   OFF CACHE BOOL "" FORCE)
 set(BUILD_SHARED_LIBS          OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(assimp)
 
+FetchContent_Declare(
+        stb
+        GIT_REPOSITORY https://github.com/nothings/stb.git
+)
+FetchContent_MakeAvailable(stb)
+
+add_library(stb INTERFACE)
+target_include_directories(stb INTERFACE ${stb_SOURCE_DIR})
+
 add_library(Catalyst SHARED ${CATALYST_SOURCES})
 
 generate_export_header(Catalyst
@@ -25,6 +34,7 @@ generate_export_header(Catalyst
 target_link_libraries(Catalyst
         PUBLIC Catalyst_Maths
         PUBLIC assimp
+        PRIVATE stb
 )
 
 target_include_directories(Catalyst

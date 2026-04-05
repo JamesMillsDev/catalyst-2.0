@@ -2,6 +2,8 @@
 
 #include "IGameInstance.h"
 
+#include "Graphics/ITexture.h"
+
 namespace Catalyst
 {
 	namespace Graphics
@@ -9,11 +11,10 @@ namespace Catalyst
 		class Camera;
 		class IMesh;
 		class IShader;
+		class ITexture;
 	}
 
-	using Graphics::Camera;
-	using Graphics::IMesh;
-	using Graphics::IShader;
+	using namespace Graphics;
 
 	namespace Editor
 	{
@@ -36,6 +37,10 @@ namespace Catalyst
 			Camera* m_camera;
 			IMesh* m_testMesh;
 			IShader* m_testShader;
+
+			ITexture* m_baseColorTexture;
+			ITexture* m_normalTexture;
+			ITexture* m_ormTexture;
 
 		};
 	}
