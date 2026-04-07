@@ -25,6 +25,8 @@ namespace Catalyst::OpenGL
 		virtual bool BeginFrame() const override;
 
 		virtual void EndFrame() override;
+		
+		GLFWwindow* ToGlfw() const;
 
 	private:
 		GLFWwindow* m_window;

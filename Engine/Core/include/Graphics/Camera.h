@@ -37,6 +37,8 @@ namespace Catalyst
 			void SetFarPlane(float farPlane);
 			[[nodiscard]] float GetFarPlane() const;
 
+			virtual void Tick();
+
 		protected:
 			Matrix4 m_view;
 			Matrix4 m_projection;

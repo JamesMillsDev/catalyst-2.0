@@ -5,11 +5,10 @@
 #include <assimp/scene.h>           // Output data structure
 
 #include "CatalystMath.h"
+#include "FlyCam.h"
 #include "GameTime.h"
 #include "Implementations.h"
 #include "Vector3.h"
-
-#include "Graphics/Camera.h"
 
 using Catalyst::Math::CatalystMath;
 using Catalyst::Math::Vector3;
@@ -17,7 +16,7 @@ using Catalyst::Math::Vector3;
 namespace Catalyst::Editor
 {
 	EditorGameInstance::EditorGameInstance() :
-		m_camera{ new Camera }, m_testMesh{ nullptr }, m_testShader{ nullptr }, m_baseColorTexture{ nullptr },
+		m_camera{ new FlyCam }, m_testMesh{ nullptr }, m_testShader{ nullptr }, m_baseColorTexture{ nullptr },
 		m_normalTexture{ nullptr }, m_ormTexture{ nullptr } { }
 
 	EditorGameInstance::~EditorGameInstance()
@@ -28,11 +27,10 @@ namespace Catalyst::Editor
 
 	void EditorGameInstance::Initialise()
 	{
-		m_camera->View() = Matrix4::MakeTransform({ 0.f, 0.f, -10.f }, { 0.f, 0.f, 0.f }, { 1.f });
 		m_renderer->SetCamera(m_camera);
 
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(R"(TestProject\Content\Models\SM_Soulspear.fbx)",
+		const aiScene* scene = importer.ReadFile(R"(TestProject\Content\Models\SM_CylonRaider.fbx)",
 		                                         aiProcess_CalcTangentSpace |
 		                                         aiProcess_Triangulate |
 		                                         aiProcess_JoinIdenticalVertices |
@@ -43,12 +41,15 @@ namespace Catalyst::Editor
 		m_testShader = new ShaderImpl{ R"(TestProject\Content\Shaders\test)" };
 		m_testShader->Load();
 
-		m_baseColorTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_Soulspear_B.tga)" };
-		m_normalTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_Soulspear_N.tga)" };
-		m_ormTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_Soulspear_ORM.tga)" };
+		m_baseColorTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_CylonRaider_B.tga)" };
+		m_normalTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_CylonRaider_N.tga)" };
+		m_ormTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_CylonRaider_ORM.tga)" };
 	}
 
-	void EditorGameInstance::Tick() { }
+	void EditorGameInstance::Tick()
+	{
+		m_camera->Tick();
+	}
 
 	void EditorGameInstance::Render()
 	{
@@ -90,6 +91,15 @@ namespace Catalyst::Editor
 
 	void EditorGameInstance::Shutdown()
 	{
+		delete m_baseColorTexture;
+		m_baseColorTexture = nullptr;
+
+		delete m_normalTexture;
+		m_normalTexture = nullptr;
+
+		delete m_ormTexture;
+		m_ormTexture = nullptr;
+
 		delete m_testMesh;
 		m_testMesh = nullptr;
 

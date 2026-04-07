@@ -75,4 +75,9 @@ namespace Catalyst::OpenGL
 			m_shouldClose = true;
 		}
 	}
+
+	GLFWwindow* OpenGLWindow::ToGlfw() const
+	{
+		return m_window;
+	}
 }

@@ -76,4 +76,8 @@ namespace Catalyst::Graphics
 	{
 		return m_farPlane;
 	}
+
+	void Camera::Tick()
+	{
+	}
 }
