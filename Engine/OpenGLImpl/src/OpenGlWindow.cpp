@@ -11,10 +11,10 @@
 
 namespace Catalyst::OpenGL
 {
-	OpenGLWindow::OpenGLWindow(const char* title, const float width, const float height)
+	OpenGlWindow::OpenGlWindow(const char* title, const float width, const float height)
 		: IWindow{ title, width, height }, m_window{ nullptr } { }
 
-	bool OpenGLWindow::Open()
+	bool OpenGlWindow::Open()
 	{
 		if (!glfwInit())
 		{
@@ -50,7 +50,7 @@ namespace Catalyst::OpenGL
 		return true;
 	}
 
-	void OpenGLWindow::Close()
+	void OpenGlWindow::Close()
 	{
 		glfwTerminate();
 
@@ -58,7 +58,7 @@ namespace Catalyst::OpenGL
 		m_window = nullptr;
 	}
 
-	bool OpenGLWindow::BeginFrame() const
+	bool OpenGlWindow::BeginFrame() const
 	{
 		glfwPollEvents();
 		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -66,7 +66,7 @@ namespace Catalyst::OpenGL
 		return glfwGetWindowAttrib(m_window, GLFW_ICONIFIED) == GLFW_FALSE;
 	}
 
-	void OpenGLWindow::EndFrame()
+	void OpenGlWindow::EndFrame()
 	{
 		glfwSwapBuffers(m_window);
 
@@ -76,7 +76,7 @@ namespace Catalyst::OpenGL
 		}
 	}
 
-	GLFWwindow* OpenGLWindow::ToGlfw() const
+	GLFWwindow* OpenGlWindow::ToGlfw() const
 	{
 		return m_window;
 	}

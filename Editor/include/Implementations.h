@@ -6,19 +6,22 @@
 #pragma once
 
 #ifdef USE_OPEN_GL
-#include <OpenGLWindow.h>
+#include <OpenGlInputManager.h>
+#include <OpenGlWindow.h>
 
 #include <Graphics/OpenGlMesh.h>
 #include <Graphics/OpenGlRenderer.h>
 #include <Graphics/OpenGlShader.h>
 #include <Graphics/OpenGlTexture.h>
 
-using WindowImpl = Catalyst::OpenGL::OpenGLWindow;
-using RendererImpl = Catalyst::Graphics::OpenGL::OpenGlRenderer;
-using MeshImpl = Catalyst::Graphics::OpenGL::OpenGlMesh;
-using ShaderImpl = Catalyst::Graphics::OpenGL::OpenGlShader;
-using TextureImpl = Catalyst::Graphics::OpenGL::OpenGlTexture;
+using WindowImpl       = Catalyst::OpenGL::OpenGlWindow;
+using InputManagerImpl = Catalyst::OpenGL::OpenGlInputManager;
+using RendererImpl     = Catalyst::Graphics::OpenGL::OpenGlRenderer;
+using MeshImpl         = Catalyst::Graphics::OpenGL::OpenGlMesh;
+using ShaderImpl       = Catalyst::Graphics::OpenGL::OpenGlShader;
+using TextureImpl      = Catalyst::Graphics::OpenGL::OpenGlTexture;
 #else
+#include "IInputManager.h"
 #include "IWindow.h"
 #include "Graphics/IMesh.h"
 #include "Graphics/IRenderer.h"
@@ -30,8 +33,8 @@ namespace Catalyst
 	class InvalidWindow : public IWindow
 	{
 	public:
-		InvalidWindow(const char* title, float width, float height) :
-			IWindow{ title, width, height } { }
+		InvalidWindow(const char* title, float width, float height)
+			: IWindow{ title, width, height } { }
 
 		virtual bool Open() override
 		{
@@ -46,6 +49,24 @@ namespace Catalyst
 		}
 
 		virtual void EndFrame() override { }
+	};
+
+	class InvalidInputManager : public IInputManager
+	{
+	protected:
+		virtual void Initialize() override { }
+
+		virtual void Poll() override { }
+
+		[[nodiscard]] virtual int PressValue() const override
+		{
+			return 0;
+		}
+
+		[[nodiscard]] virtual int ReleaseValue() const override
+		{
+			return 0;
+		}
 	};
 
 	namespace Graphics
@@ -71,8 +92,8 @@ namespace Catalyst
 		class InvalidShader : public IShader
 		{
 		public:
-			explicit InvalidShader(const string& path) :
-				IShader{ path } { }
+			explicit InvalidShader(const string& path)
+				: IShader{ path } { }
 
 			virtual bool Load() override
 			{
@@ -123,11 +144,11 @@ namespace Catalyst
 		public:
 			InvalidTexture() = default;
 
-			explicit InvalidTexture(const string& fileName) :
-				ITexture{ fileName } { }
+			explicit InvalidTexture(const string& fileName)
+				: ITexture{ fileName } { }
 
-			InvalidTexture(const uint32 width, const uint32 height, const ETextureFormat format) :
-				ITexture{ width, height, format } { }
+			InvalidTexture(const uint32 width, const uint32 height, const ETextureFormat format)
+				: ITexture{ width, height, format } { }
 
 		public:
 			bool Load(const string& fileName) override
@@ -136,14 +157,16 @@ namespace Catalyst
 			}
 
 			void Create(unsigned width, unsigned height, ETextureFormat format, uint8* pixels) override { }
+
 			void Bind(uint32 slot) const override { }
 		};
 	}
 }
 
-using WindowImpl = Catalyst::InvalidWindow;
-using RendererImpl = Catalyst::Graphics::InvalidRenderer;
-using MeshImpl = Catalyst::Graphics::InvalidMesh;
-using ShaderImpl = Catalyst::Graphics::InvalidShader;
-using TextureImpl = Catalyst::Graphics::InvalidTexture;
+using WindowImpl       = Catalyst::InvalidWindow;
+using InputManagerImpl = Catalyst::InvalidInputManager;
+using RendererImpl     = Catalyst::Graphics::InvalidRenderer;
+using MeshImpl         = Catalyst::Graphics::InvalidMesh;
+using ShaderImpl       = Catalyst::Graphics::InvalidShader;
+using TextureImpl      = Catalyst::Graphics::InvalidTexture;
 #endif

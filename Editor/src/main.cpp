@@ -7,9 +7,12 @@
 #include "EditorGameInstance.h"
 #include "Implementations.h"
 
+using Catalyst::Application;
 using Catalyst::Editor::EditorGameInstance;
 
 int main()
 {
-	return Catalyst::Application::Run<EditorGameInstance, WindowImpl, RendererImpl>("Catalyst", 1920.f, 1080.f);
+	return Application::Run<EditorGameInstance, WindowImpl, RendererImpl, InputManagerImpl>(
+		 "Catalyst", 1920.f, 1080.f
+		);
 }

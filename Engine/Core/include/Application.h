@@ -7,6 +7,7 @@
 
 #include "catalyst_export.h"
 #include "IGameInstance.h"
+#include "IInputManager.h"
 #include "IWindow.h"
 
 #include "Graphics/IRenderer.h"
@@ -21,7 +22,8 @@ namespace Catalyst
 	class CATALYST_EXPORT Application
 	{
 	public:
-		template<Derived<IGameInstance> GAME, Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER>
+		template<Derived<IGameInstance> GAME, Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER,
+			Derived<IInputManager> INPUT_MANAGER>
 		static int Run(const char* title, float w, float h);
 
 		static Application const* Instance();
@@ -39,14 +41,15 @@ namespace Catalyst
 
 	private:
 		Application();
+
 		~Application();
 
 	private:
 		int Process();
-
 	};
 
-	template<Derived<IGameInstance> GAME, Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER>
+	template<Derived<IGameInstance> GAME, Derived<IWindow> WINDOW, Derived<IRenderer> RENDERER,
+		Derived<IInputManager> INPUT_MANAGER>
 	int Application::Run(const char* title, float w, float h)
 	{
 		if (m_instance != nullptr)
@@ -54,12 +57,14 @@ namespace Catalyst
 			return APP_INSTANCE_NOT_NULL;
 		}
 
-		m_instance = new Application;
-		m_instance->m_window = new WINDOW{ title, w, h };
+		m_instance             = new Application;
+		m_instance->m_window   = new WINDOW{ title, w, h };
 		m_instance->m_renderer = new RENDERER;
 
-		m_instance->m_gameInstance = new GAME;
-		m_instance->m_gameInstance->m_window = m_instance->m_window;
+		IInputManager::Create<INPUT_MANAGER>();
+
+		m_instance->m_gameInstance             = new GAME;
+		m_instance->m_gameInstance->m_window   = m_instance->m_window;
 		m_instance->m_gameInstance->m_renderer = m_instance->m_renderer;
 
 		const int retCode = m_instance->Process();

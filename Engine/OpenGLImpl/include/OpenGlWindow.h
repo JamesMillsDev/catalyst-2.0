@@ -12,10 +12,10 @@ struct GLFWwindow;
 
 namespace Catalyst::OpenGL
 {
-	class CATALYSTOPENGL_EXPORT OpenGLWindow : public IWindow
+	class CATALYSTOPENGL_EXPORT OpenGlWindow : public IWindow
 	{
 	public:
-		OpenGLWindow(const char* title, float width, float height);
+		OpenGlWindow(const char* title, float width, float height);
 
 	public:
 		virtual bool Open() override;

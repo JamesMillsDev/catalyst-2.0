@@ -46,6 +46,7 @@ namespace Catalyst
 			return WINDOW_FAILED_TO_OPEN;
 		}
 
+		IInputManager::m_instance->Initialize();
 		GameTime::Init();
 
 		m_gameInstance->Initialise();
@@ -59,6 +60,8 @@ namespace Catalyst
 				continue;
 			}
 
+			IInputManager::m_instance->Poll();
+
 			m_gameInstance->Tick();
 			m_gameInstance->Render();
 
@@ -68,6 +71,8 @@ namespace Catalyst
 		m_gameInstance->Shutdown();
 
 		m_window->Close();
+
+		IInputManager::Destroy();
 
 		return SUCCESS;
 	}
