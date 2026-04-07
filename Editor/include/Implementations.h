@@ -145,4 +145,5 @@ using WindowImpl = Catalyst::InvalidWindow;
 using RendererImpl = Catalyst::Graphics::InvalidRenderer;
 using MeshImpl = Catalyst::Graphics::InvalidMesh;
 using ShaderImpl = Catalyst::Graphics::InvalidShader;
+using TextureImpl = Catalyst::Graphics::InvalidTexture;
 #endif
