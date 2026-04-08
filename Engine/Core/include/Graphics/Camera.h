@@ -22,11 +22,13 @@ namespace Catalyst
 			virtual ~Camera();
 
 		public:
-			Matrix4& View();
+			[[nodiscard]] virtual Matrix4 View();
+			void SetView(const Matrix4& view);
+
 			[[nodiscard]] float Fov() const;
 
-			Matrix4 ProjectTransform(const Matrix4& transform) const;
-			Matrix4 Projection() const;
+			[[nodiscard]] Matrix4 ProjectTransform(const Matrix4& transform) const;
+			[[nodiscard]] Matrix4 Projection() const;
 
 			void SetFovAngle(float fovAngle);
 			[[nodiscard]] float GetFovAngle() const;

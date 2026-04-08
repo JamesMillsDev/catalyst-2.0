@@ -23,6 +23,8 @@ namespace Catalyst::Editor
 		FlyCam();
 
 	public:
+		[[nodiscard]] virtual Matrix4 View() override;
+
 		virtual void Tick() override;
 
 	protected:

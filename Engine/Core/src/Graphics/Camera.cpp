@@ -27,9 +27,14 @@ namespace Catalyst::Graphics
 
 	Camera::~Camera() = default;
 
-	Matrix4& Camera::View()
+	Matrix4 Camera::View()
 	{
 		return m_view;
+	}
+
+	void Camera::SetView(const Matrix4& view)
+	{
+		m_view = view;
 	}
 
 	float Camera::Fov() const

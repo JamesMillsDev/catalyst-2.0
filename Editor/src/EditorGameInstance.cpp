@@ -65,7 +65,7 @@ namespace Catalyst::Editor
 		{
 			m_renderer->SetProjectionViewMatrix(m_testShader);
 			m_testShader->Set("model", Matrix4::Identity());
-			m_testShader->Set("light.color", Vector3{ 1.f, 1.f, 0.f });
+			m_testShader->Set("light.color", Vector3{ 1.f, 1.f, 1.f });
 			m_testShader->Set("light.direction", Vector3{ CatalystMath::Cos(time * 2.f), CatalystMath::Sin(time * 2.f), 0.f });
 			m_testShader->Set("ambientLight", Vector3{ .25f, .25f, .25f });
 
