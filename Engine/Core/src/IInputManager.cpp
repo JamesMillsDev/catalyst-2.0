@@ -66,6 +66,32 @@ namespace Catalyst
 		return m_mouseScroll;
 	}
 
+	void IInputManager::OnMouseMove(const float x, const float y)
+	{
+		m_mouseX = x;
+		m_mouseY = y;
+
+		if (m_firstMouseMove)
+		{
+			m_oldMouseX = m_mouseX;
+			m_oldMouseY = m_mouseY;
+
+			m_firstMouseMove = false;
+		}
+	}
+
+	void IInputManager::SetMouseScroll(const float scroll)
+	{
+		m_mouseScroll += scroll;
+	}
+
+	void IInputManager::SetMouseEntered(bool entered)
+	{
+		m_firstMouseMove = entered;
+	}
+
+	IInputManager* IInputManager::m_instance = nullptr;
+
 	IInputManager::IInputManager()
 		: m_mouseX{ 0 }, m_mouseY{ 0 }, m_oldMouseX{ 0 }, m_oldMouseY{ 0 }, m_mouseScroll{ 0 },
 		  m_firstMouseMove{ false }, m_lastKeys{ nullptr }, m_currentKeys{ nullptr }, m_lastButtons{ },
@@ -79,8 +105,6 @@ namespace Catalyst
 		delete[] m_currentKeys;
 		m_currentKeys = nullptr;
 	}
-
-	IInputManager* IInputManager::m_instance = nullptr;
 
 	void IInputManager::Destroy()
 	{

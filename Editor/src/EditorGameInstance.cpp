@@ -30,7 +30,7 @@ namespace Catalyst::Editor
 		m_renderer->SetCamera(m_camera);
 
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(R"(TestProject\Content\Models\SM_CylonRaider.fbx)",
+		const aiScene* scene = importer.ReadFile(R"(TestProject\Content\Models\SM_ToiletBrush.fbx)",
 		                                         aiProcess_CalcTangentSpace |
 		                                         aiProcess_Triangulate |
 		                                         aiProcess_JoinIdenticalVertices |
@@ -41,9 +41,9 @@ namespace Catalyst::Editor
 		m_testShader = new ShaderImpl{ R"(TestProject\Content\Shaders\test)" };
 		m_testShader->Load();
 
-		m_baseColorTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_CylonRaider_B.tga)" };
-		m_normalTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_CylonRaider_N.tga)" };
-		m_ormTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_CylonRaider_ORM.tga)" };
+		m_baseColorTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_ToiletBrush_B.tga)" };
+		m_normalTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_ToiletBrush_N.tga)" };
+		m_ormTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_ToiletBrush_ORM.tga)" };
 	}
 
 	void EditorGameInstance::Tick()

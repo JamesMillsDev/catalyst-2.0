@@ -5,22 +5,34 @@
 
 #pragma once
 
+#include "Vector2.h"
+#include "Vector3.h"
+
 #include "Graphics/Camera.h"
+
+using Catalyst::Math::Vector2;
+using Catalyst::Math::Vector3;
 
 namespace Catalyst::Editor
 {
-    using Graphics::Camera;
+	using Graphics::Camera;
 
-    class FlyCam : public Camera
-    {
-    public:
-        FlyCam();
+	class FlyCam : public Camera
+	{
+	public:
+		FlyCam();
 
-    public:
-        virtual void Tick() override;
+	public:
+		virtual void Tick() override;
 
-    protected:
-        float m_moveSpeed;
+	protected:
+		float m_theta;
+		float m_phi;
 
-    };
+		float m_turnSpeed;
+		float m_moveSpeed;
+
+		Vector3 m_location;
+		Vector2 m_lastMouse;
+	};
 }

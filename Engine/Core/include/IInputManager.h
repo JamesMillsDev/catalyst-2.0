@@ -186,6 +186,12 @@ namespace Catalyst
 
 		[[nodiscard]] float GetMouseScroll() const;
 
+		void OnMouseMove(float x, float y);
+
+		void SetMouseScroll(float scroll);
+
+		void SetMouseEntered(bool entered);
+
 	protected:
 		vector<int> m_pressedKeys;
 		vector<uint32> m_pressedCharacters;
@@ -206,6 +212,9 @@ namespace Catalyst
 		int m_currentButtons[MouseButton8 + 1];
 
 	protected:
+		static IInputManager* m_instance;
+
+	protected:
 		IInputManager();
 
 		virtual ~IInputManager();
@@ -218,9 +227,6 @@ namespace Catalyst
 		[[nodiscard]] virtual int PressValue() const = 0;
 
 		[[nodiscard]] virtual int ReleaseValue() const = 0;
-
-	private:
-		static IInputManager* m_instance;
 
 	private:
 		template<Derived<IInputManager> INPUT_MANAGER>

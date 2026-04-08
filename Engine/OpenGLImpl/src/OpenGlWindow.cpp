@@ -44,8 +44,8 @@ namespace Catalyst::OpenGL
 		}
 
 		glViewport(0, 0, static_cast<int>(m_width), static_cast<int>(m_height));
-		//glClearColor(.25f, .25f, .25f, 1.f);
-		//glEnable(GL_DEPTH_TEST);
+		glClearColor(.25f, .25f, .25f, 1.f);
+		glEnable(GL_DEPTH_TEST);
 
 		return true;
 	}
@@ -61,7 +61,7 @@ namespace Catalyst::OpenGL
 	bool OpenGlWindow::BeginFrame() const
 	{
 		glfwPollEvents();
-		//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		return glfwGetWindowAttrib(m_window, GLFW_ICONIFIED) == GLFW_FALSE;
 	}
