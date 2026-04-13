@@ -30,11 +30,11 @@ in VS_OUT
     mat3 TBN;
 } fs_in;
 
-const int MAX_LIGHTS = 4;
+const int MAX_LIGHTS = 8;
 
 uniform Light lights[MAX_LIGHTS];
 uniform Material material;
-//uniform vec3 ambientLight;
+uniform vec3 ambientLight;
 
 uniform vec3 cameraLocation;
 
@@ -161,7 +161,13 @@ void main()
     }
 
     // ambient lighting
-    vec3 ambient = vec3(0.03) * material.baseColor * ao;
+    vec3 kS = fresnelSchlick(max(dot(N, V), 0.0), F0);
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;	  
+    vec3 irradiance = ambientLight;
+    vec3 diffuse = irradiance * albedo;
+    vec3 ambient = (kD * diffuse) * ao;
+    //vec3 ambient = ambientLight * material.baseColor * ao;
 
     vec3 color = ambient + Lo;
 

@@ -12,6 +12,8 @@ namespace Catalyst
 		class IMesh;
 		class IShader;
 		class ITexture;
+		class Material;
+		class SceneLighting;
 	}
 
 	using namespace Graphics;
@@ -38,9 +40,8 @@ namespace Catalyst
 			IMesh* m_testMesh;
 			IShader* m_testShader;
 
-			ITexture* m_baseColorTexture;
-			ITexture* m_normalTexture;
-			ITexture* m_ormTexture;
+			SceneLighting* m_sceneLighting;
+			Material* m_material;
 
 		};
 	}

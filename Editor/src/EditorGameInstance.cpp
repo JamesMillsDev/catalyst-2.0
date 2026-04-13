@@ -12,14 +12,18 @@
 #include "Implementations.h"
 #include "Vector3.h"
 
+#include "Graphics/Light.h"
+#include "Graphics/Material.h"
+#include "Graphics/SceneLighting.h"
+
 using Catalyst::Math::CatalystMath;
 using Catalyst::Math::Vector3;
 
 namespace Catalyst::Editor
 {
 	EditorGameInstance::EditorGameInstance() :
-		m_camera{ new FlyCam }, m_testMesh{ nullptr }, m_testShader{ nullptr }, m_baseColorTexture{ nullptr },
-		m_normalTexture{ nullptr }, m_ormTexture{ nullptr } { }
+		m_camera{ new FlyCam }, m_testMesh{ nullptr }, m_testShader{ nullptr }, m_sceneLighting{ nullptr },
+		m_material{ nullptr } { }
 
 	EditorGameInstance::~EditorGameInstance()
 	{
@@ -32,7 +36,7 @@ namespace Catalyst::Editor
 		m_renderer->SetCamera(m_camera);
 
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(R"(TestProject\Content\Models\SM_ToiletBrush.fbx)",
+		const aiScene* scene = importer.ReadFile(R"(TestProject\Content\Models\SM_Soulspear.fbx)",
 		                                         aiProcess_CalcTangentSpace |
 		                                         aiProcess_Triangulate |
 		                                         aiProcess_JoinIdenticalVertices |
@@ -43,9 +47,30 @@ namespace Catalyst::Editor
 		m_testShader = new ShaderImpl{ R"(TestProject\Content\Shaders\pbr)" };
 		m_testShader->Load();
 
-		m_baseColorTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_ToiletBrush_B.tga)" };
-		m_normalTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_ToiletBrush_N.tga)" };
-		m_ormTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_ToiletBrush_ORM.tga)" };
+		TextureImpl* baseColorTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_Soulspear_B.tga)" };
+		TextureImpl* normalTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_Soulspear_N.tga)" };
+		TextureImpl* ormTexture = new TextureImpl{ R"(TestProject\Content\Textures\T_Soulspear_ORM.tga)" };
+
+		m_sceneLighting = new SceneLighting;
+
+		Light* light = new Light{ { 1.f, 0.f, 0.f }, 500.f };
+		light->SetLocation({ 5.f, 3.f, 0.f });
+
+		Light* light2 = new Light{ { 0.f, 0.f, 1.f }, 500.f };
+		light2->SetLocation({ -5.f, 3.f, 0.f });
+
+		m_sceneLighting->AddLight(light);
+		m_sceneLighting->AddLight(light2);
+		m_sceneLighting->SetAmbientColor({ .5f });
+
+		m_material = new Material{ m_testShader };
+		m_material->Set("baseColorTex", baseColorTexture);
+		m_material->Set("normalTex", normalTexture);
+		m_material->Set("ormTex", ormTexture);
+
+		m_material->Set("baseColor", Vector3{ .8f });
+		//m_material->Set("specularColor", Vector3{ .5f });
+		//m_material->Set("specularPower", 20.f);
 	}
 
 	void EditorGameInstance::Tick()
@@ -55,35 +80,17 @@ namespace Catalyst::Editor
 
 	void EditorGameInstance::Render()
 	{
-		float time = GameTime::AppTime();
-
 		m_testShader->Bind(nullptr);
 
 		try
 		{
-			for (int i = 1; i < 4; ++i)
-			{
-				m_testShader->Set(std::format("lights[{}].isSet", i), 0);
-			}
-
 			m_renderer->SetProjectionViewMatrix(m_testShader);
 			m_testShader->Set("model", Matrix4::Identity());
-			m_testShader->Set("lights[0].isSet", 1);
-			m_testShader->Set("lights[0].isDirectional", 1);
-			m_testShader->Set("lights[0].color", Vector3{ 1.f, 1.f, 1.f });
-			m_testShader->Set("lights[0].direction", Vector3{ CatalystMath::Cos(time * 2.f), CatalystMath::Sin(time * 2.f), 0.f });
-			//m_testShader->Set("ambientLight", Vector3{ .25f, .25f, .25f });
 
-			//m_testShader->Set("material.ambientColor", Vector3{ 0.f });
-			m_testShader->Set("material.baseColor", Vector3{ .8f });
-			//m_testShader->Set("material.specularColor", Vector3{ .5f });
-			//m_testShader->Set("material.specularPower", 20.f);
+			m_sceneLighting->Render(m_testShader);
+			m_material->Render();
 
 			m_testShader->Set("cameraLocation", m_camera->View().Translation());
-
-			m_testShader->Set("material.baseColorTex", m_baseColorTexture, 0);
-			m_testShader->Set("material.normalTex", m_normalTexture, 1);
-			m_testShader->Set("material.ormTex", m_ormTexture, 2);
 		}
 		catch ([[maybe_unused]] std::exception& e)
 		{
@@ -96,14 +103,11 @@ namespace Catalyst::Editor
 
 	void EditorGameInstance::Shutdown()
 	{
-		delete m_baseColorTexture;
-		m_baseColorTexture = nullptr;
+		delete m_sceneLighting;
+		m_sceneLighting = nullptr;
 
-		delete m_normalTexture;
-		m_normalTexture = nullptr;
-
-		delete m_ormTexture;
-		m_ormTexture = nullptr;
+		delete m_material;
+		m_material = nullptr;
 
 		delete m_testMesh;
 		m_testMesh = nullptr;
