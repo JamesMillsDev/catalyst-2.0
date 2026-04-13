@@ -11,6 +11,8 @@
 #include "Implementations.h"
 #include "Vector3.h"
 
+#include "glm/ext/matrix_transform.hpp"
+
 using Catalyst::Math::CatalystMath;
 
 namespace Catalyst::Editor
@@ -34,7 +36,7 @@ namespace Catalyst::Editor
 			CatalystMath::Cos(phiR) * CatalystMath::Sin(thetaR)
 		};
 
-		return Matrix4::MakeLookAt(m_location, m_location + forward, Vector3::UP);
+		return glm::lookAt(static_cast<vec3>(m_location), static_cast<vec3>(m_location + forward), { 0, 1, 0 })/*Matrix4::MakeLookAt(m_location, m_location + forward, Vector3::UP)*/;
 	}
 
 	void FlyCam::Tick()

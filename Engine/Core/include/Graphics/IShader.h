@@ -27,6 +27,8 @@ namespace Catalyst
 
 	namespace Graphics
 	{
+		class ITexture;
+
 		/**
 		 * A simple interface class that is empty in the base API, but has a custom implementation for each
 		 * Render Interface.
@@ -78,6 +80,8 @@ namespace Catalyst
 			virtual void Set(const string& id, Matrix3* value, int count) = 0;
 
 			virtual void Set(const string& id, Matrix4* value, int count) = 0;
+
+			virtual void Set(const string& id, ITexture* value, int index) = 0;
 
 		protected:
 			virtual vector<string> Extensions() = 0;

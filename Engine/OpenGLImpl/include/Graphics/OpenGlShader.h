@@ -88,6 +88,8 @@ namespace Catalyst::Graphics::OpenGL
 
 		virtual void Set(const string& id, Matrix4* value, int count) override;
 
+		virtual void Set(const string& id, ITexture* value, int index) override;
+
 	protected:
 		virtual vector<string> Extensions() override;
 

@@ -2,6 +2,7 @@
 
 struct Light
 {
+    vec3 location;
     vec3 direction;
     vec3 color;
 };
@@ -12,6 +13,10 @@ struct Material
     vec3 diffuseColor;
     vec3 specularColor;
     float specularPower;
+
+    sampler2D baseColorTex;
+    sampler2D normalTex;
+    sampler2D ormTex;
 };
 
 uniform Light light;
@@ -19,10 +24,6 @@ uniform Material material;
 uniform vec3 ambientLight;
 
 uniform vec3 cameraLocation;
-
-uniform sampler2D baseColorTex;
-uniform sampler2D normalTex;
-// uniform sampler2D ormTex;
 
 in VS_OUT
 {
@@ -39,8 +40,13 @@ out vec4 fragColor;
 void main()
 {
     // Sample textures
-    vec3 texBaseColor = texture(baseColorTex, fs_in.uv0).rgb;
-    vec3 texNormal = texture(normalTex, fs_in.uv0).rgb;
+    vec3 texBaseColor = texture(material.baseColorTex, fs_in.uv0).rgb;
+    vec3 texNormal = texture(material.normalTex, fs_in.uv0).rgb;
+    vec3 texOrm = texture(material.ormTex, fs_in.uv0).rgb;
+
+    float ao = texOrm.r;
+    float roughness = texOrm.g;
+    float metallic = texOrm.b;
 
     // Ensure vectors are normalized
     vec3 T = normalize(fs_in.tangent);

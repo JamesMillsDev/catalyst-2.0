@@ -198,28 +198,28 @@ namespace Catalyst::Math
 		explicit Matrix4(const Matrix3& mat);
 
 		/**
-		 * @brief Constructs a matrix from sixteen floats in row-major order.
-		 * @param m1  Row 1, column 1.
-		 * @param m2  Row 1, column 2.
-		 * @param m3  Row 1, column 3.
-		 * @param m4  Row 1, column 4.
-		 * @param m5  Row 2, column 1.
-		 * @param m6  Row 2, column 2.
-		 * @param m7  Row 2, column 3.
-		 * @param m8  Row 2, column 4.
-		 * @param m9  Row 3, column 1.
-		 * @param m10 Row 3, column 2.
-		 * @param m11 Row 3, column 3.
-		 * @param m12 Row 3, column 4.
-		 * @param m13 Row 4, column 1.
-		 * @param m14 Row 4, column 2.
-		 * @param m15 Row 4, column 3.
-		 * @param m16 Row 4, column 4.
+		 * @brief Constructs a matrix from sixteen floats in column-major order.
+		 * @param m1  Column 1, row 1.
+		 * @param m2  Column 1, row 2.
+		 * @param m3  Column 1, row 3.
+		 * @param m4  Column 1, row 4.
+		 * @param m5  Column 2, row 1.
+		 * @param m6  Column 2, row 2.
+		 * @param m7  Column 2, row 3.
+		 * @param m8  Column 2, row 4.
+		 * @param m9  Column 3, row 1.
+		 * @param m10 Column 3, row 2.
+		 * @param m11 Column 3, row 3.
+		 * @param m12 Column 3, row 4.
+		 * @param m13 Column 4, row 1.
+		 * @param m14 Column 4, row 2.
+		 * @param m15 Column 4, row 3.
+		 * @param m16 Column 4, row 4.
 		 */
-		Matrix4(float m1, float m5, float m9, float m13,
-		     float m2, float m6, float m10, float m14,
-		     float m3, float m7, float m11, float m15,
-		     float m4, float m8, float m12, float m16);
+		Matrix4(float m1,  float m2,  float m3,  float m4,
+		        float m5,  float m6,  float m7,  float m8,
+		        float m9,  float m10, float m11, float m12,
+		        float m13, float m14, float m15, float m16);
 
 		/**
 		 * @brief Copy constructor.

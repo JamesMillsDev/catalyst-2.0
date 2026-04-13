@@ -13,6 +13,8 @@
 #include "Vector3.h"
 #include "Vector4.h"
 
+#include "Graphics/ITexture.h"
+
 namespace fs = std::filesystem;
 using std::fstream;
 using std::runtime_error;
@@ -383,6 +385,23 @@ namespace Catalyst::Graphics::OpenGL
 
 		// Assign the uniform.
 		glUniformMatrix4fv(location, count, GL_FALSE, reinterpret_cast<const GLfloat*>(value));
+	}
+
+	void OpenGlShader::Set(const string& id, ITexture* value, int index)
+	{
+		assert(m_program > 0 && "Program must be built setting uniforms.");
+
+		// Attempt to get the uniform location, if unsuccessful, throw an error
+		const int location = GetUniformLocation(id);
+		if (location < 0)
+		{
+			throw runtime_error("Invalid uniform location.");
+		}
+
+		value->Bind(index);
+
+		// Assign the uniform.
+		glUniform1i(location, index);
 	}
 
 	vector<string> OpenGlShader::Extensions()

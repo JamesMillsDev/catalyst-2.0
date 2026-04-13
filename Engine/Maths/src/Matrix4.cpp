@@ -28,12 +28,13 @@ namespace Catalyst::Math
 
 	Matrix4 Matrix4::MakeTranslate(float x, float y, float z)
 	{
+		// Column-major: col0=(1,0,0,0), col1=(0,1,0,0), col2=(0,0,1,0), col3=(x,y,z,1)
 		return
 		{
-			1.f, 0.f, 0.f, x,
-			0.f, 1.f, 0.f, y,
-			0.f, 0.f, 1.f, z,
-			0.f, 0.f, 0.f, 1.f
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			x,   y,   z,   1.f
 		};
 	}
 
@@ -42,12 +43,13 @@ namespace Catalyst::Math
 		const float sin = CatalystMath::Sin(rad);
 		const float cos = CatalystMath::Cos(rad);
 
+		// Column-major: col0=(1,0,0,0), col1=(0,cos,-sin,0), col2=(0,sin,cos,0), col3=(0,0,0,1)
 		return
 		{
-			1.f, 0.f, 0.f, 0.f,
-			0.f, cos, sin, 0.f,
-			0.f, -sin, cos, 0.f,
-			0.f, 0.f, 0.f, 1.f
+			1.f,  0.f,  0.f, 0.f,
+			0.f,  cos, -sin, 0.f,
+			0.f,  sin,  cos, 0.f,
+			0.f,  0.f,  0.f, 1.f
 		};
 	}
 
@@ -56,12 +58,13 @@ namespace Catalyst::Math
 		const float sin = CatalystMath::Sin(rad);
 		const float cos = CatalystMath::Cos(rad);
 
+		// Column-major: col0=(cos,0,sin,0), col1=(0,1,0,0), col2=(-sin,0,cos,0), col3=(0,0,0,1)
 		return
 		{
-			cos, 0.f, -sin, 0.f,
-			0.f, 1.f, 0.f, 0.f,
-			sin, 0.f, cos, 0.f,
-			0.f, 0.f, 0.f, 1.f
+			 cos, 0.f, sin, 0.f,
+			 0.f, 1.f, 0.f, 0.f,
+			-sin, 0.f, cos, 0.f,
+			 0.f, 0.f, 0.f, 1.f
 		};
 	}
 
@@ -70,12 +73,13 @@ namespace Catalyst::Math
 		const float sin = CatalystMath::Sin(rad);
 		const float cos = CatalystMath::Cos(rad);
 
+		// Column-major: col0=(cos,-sin,0,0), col1=(sin,cos,0,0), col2=(0,0,1,0), col3=(0,0,0,1)
 		return
 		{
-			cos, sin, 0.f, 0.f,
-			-sin, cos, 0.f, 0.f,
-			0.f, 0.f, 1.f, 0.f,
-			0.f, 0.f, 0.f, 1.f
+			cos, -sin, 0.f, 0.f,
+			sin,  cos, 0.f, 0.f,
+			0.f,  0.f, 1.f, 0.f,
+			0.f,  0.f, 0.f, 1.f
 		};
 	}
 
@@ -93,11 +97,12 @@ namespace Catalyst::Math
 
 	Matrix4 Matrix4::MakeScale(float x, float y, float z)
 	{
+		// Column-major: col0=(x,0,0,0), col1=(0,y,0,0), col2=(0,0,z,0), col3=(0,0,0,1)
 		return
 		{
-			x, 0.f, 0.f, 0.f,
-			0.f, y, 0.f, 0.f,
-			0.f, 0.f, z, 0.f,
+			x,   0.f, 0.f, 0.f,
+			0.f, y,   0.f, 0.f,
+			0.f, 0.f, z,   0.f,
 			0.f, 0.f, 0.f, 1.f
 		};
 	}
@@ -111,39 +116,54 @@ namespace Catalyst::Math
 	{
 		const float tanFov = CatalystMath::Tan(fovY / 2.f);
 
+		// Column-major:
+		//   col0 = (1/(aspect*tanFov), 0, 0, 0)
+		//   col1 = (0, 1/tanFov, 0, 0)
+		//   col2 = (0, 0, -(far+near)/(far-near), -1)
+		//   col3 = (0, 0, -(2*far*near)/(far-near), 0)
 		return
 		{
-			1 / (aspect * tanFov), 0.f, 0.f, 0.f,
-			0.f, 1 / tanFov, 0.f, 0.f,
-			0.f, 0.f, -((far + near) / (far - near)), -(2.f * far * near / (far - near)),
-			0.f, 0.f, -1.f, 0.f
+			1.f / (aspect * tanFov), 0.f,          0.f,                              0.f,
+			0.f,                     1.f / tanFov,  0.f,                              0.f,
+			0.f,                     0.f,          -((far + near) / (far - near)),   -1.f,
+			0.f,                     0.f,          -(2.f * far * near / (far - near)), 0.f
 		};
 	}
 
 	Matrix4 Matrix4::MakeOrthographic(const float left, const float right, const float bottom, const float top,
 	                                  const float near, const float far)
 	{
+		// Column-major:
+		//   col0 = (2/(r-l), 0, 0, 0)
+		//   col1 = (0, 2/(t-b), 0, 0)
+		//   col2 = (0, 0, -2/(f-n), 0)
+		//   col3 = (-(r+l)/(r-l), -(t+b)/(t-b), -(f+n)/(f-n), 1)
 		return
 		{
-			2.f / (right - left), 0.f, 0.f, -((right + left) / (right - left)),
-			0.f, 2.f / (top - bottom), 0.f, -((top + bottom) / (top - bottom)),
-			0.f, 0.f, -2.f / (far - near), -((far + near) / (far - near)),
-			0.f, 0.f, 0.f, 1.f
+			2.f / (right - left), 0.f,                  0.f,                  0.f,
+			0.f,                  2.f / (top - bottom),  0.f,                  0.f,
+			0.f,                  0.f,                  -2.f / (far - near),  0.f,
+			-((right + left) / (right - left)), -((top + bottom) / (top - bottom)), -((far + near) / (far - near)), 1.f
 		};
 	}
 
 	Matrix4 Matrix4::MakeLookAt(const Vector3& eye, const Vector3& target, const Vector3& up)
 	{
-		const Vector3 zAxis = (eye - target).Normalized();
-		const Vector3 xAxis = Vector3::Cross(up, zAxis).Normalized();
-		const Vector3 yAxis = Vector3::Cross(zAxis, xAxis);
+		const Vector3 f = (target - eye).Normalized();
+		const Vector3 s = Vector3::Cross(f, up).Normalized();
+		const Vector3 u = Vector3::Cross(s, f);
 
+		// Column-major:
+		//   col0 = (xAxis.x, xAxis.y, xAxis.z, 0)
+		//   col1 = (yAxis.x, yAxis.y, yAxis.z, 0)
+		//   col2 = (zAxis.x, zAxis.y, zAxis.z, 0)
+		//   col3 = (-dot(xAxis,eye), -dot(yAxis,eye), -dot(zAxis,eye), 1)
 		return
 		{
-			xAxis.x, yAxis.x, zAxis.x, -Vector3::Dot(xAxis, eye),
-			xAxis.y, yAxis.y, zAxis.y, -Vector3::Dot(yAxis, eye),
-			xAxis.z, yAxis.z, zAxis.z, -Vector3::Dot(zAxis, eye),
-			0.f, 0.f, 0.f, 1.f
+			s.x, s.y, s.z, 0.f,
+			u.x, u.y, u.z, 0.f,
+			-f.x, -f.y, -f.z, 0.f,
+			-Vector3::Dot(s, eye), -Vector3::Dot(u, eye), Vector3::Dot(f, eye), 1.f
 		};
 	}
 
@@ -192,10 +212,15 @@ namespace Catalyst::Math
 		  m9{ mat.m7 }, m10{ mat.m8 }, m11{ mat.m9 }, m12{ 0.f },
 		  m13{ 0.f }, m14{ 0.f }, m15{ 0.f }, m16{ 1.f } { }
 
-	Matrix4::Matrix4(const float m1, const float m5, const float m9, const float m13,
-	                 const float m2, const float m6, const float m10, const float m14,
-	                 const float m3, const float m7, const float m11, const float m15,
-	                 const float m4, const float m8, const float m12, const float m16)
+	// Parameters are supplied in column-major order:
+	//   col0 = (m1,  m2,  m3,  m4 )
+	//   col1 = (m5,  m6,  m7,  m8 )
+	//   col2 = (m9,  m10, m11, m12)
+	//   col3 = (m13, m14, m15, m16)
+	Matrix4::Matrix4(const float m1,  const float m2,  const float m3,  const float m4,
+	                 const float m5,  const float m6,  const float m7,  const float m8,
+	                 const float m9,  const float m10, const float m11, const float m12,
+	                 const float m13, const float m14, const float m15, const float m16)
 		: m1{ m1 }, m2{ m2 }, m3{ m3 }, m4{ m4 },
 		  m5{ m5 }, m6{ m6 }, m7{ m7 }, m8{ m8 },
 		  m9{ m9 }, m10{ m10 }, m11{ m11 }, m12{ m12 },
@@ -287,12 +312,17 @@ namespace Catalyst::Math
 
 	Matrix4 Matrix4::Transposed() const
 	{
+		// The transpose swaps rows and columns, so each new column is the corresponding old row.
+		//   New col0 = old row0 = (m1, m5, m9,  m13)
+		//   New col1 = old row1 = (m2, m6, m10, m14)
+		//   New col2 = old row2 = (m3, m7, m11, m15)
+		//   New col3 = old row3 = (m4, m8, m12, m16)
 		return
 		{
-			m1, m2, m3, m4,
-			m5, m6, m7, m8,
-			m9, m10, m11, m12,
-			m13, m14, m15, m16
+			m1,  m5,  m9,  m13,
+			m2,  m6,  m10, m14,
+			m3,  m7,  m11, m15,
+			m4,  m8,  m12, m16
 		};
 	}
 
@@ -303,48 +333,67 @@ namespace Catalyst::Math
 		const float det   = Determinant();
 		const float detO1 = 1.f / det;
 
+		// Supply values in column-major order: col0 first (m1..m4), then col1, col2, col3.
 		return
 		{
-			detO1 * adj.m1, detO1 * adj.m5, detO1 * adj.m9, detO1 * adj.m13,
-			detO1 * adj.m2, detO1 * adj.m6, detO1 * adj.m10, detO1 * adj.m14,
-			detO1 * adj.m3, detO1 * adj.m7, detO1 * adj.m11, detO1 * adj.m15,
-			detO1 * adj.m4, detO1 * adj.m8, detO1 * adj.m12, detO1 * adj.m16
+			detO1 * adj.m1,  detO1 * adj.m2,  detO1 * adj.m3,  detO1 * adj.m4,
+			detO1 * adj.m5,  detO1 * adj.m6,  detO1 * adj.m7,  detO1 * adj.m8,
+			detO1 * adj.m9,  detO1 * adj.m10, detO1 * adj.m11, detO1 * adj.m12,
+			detO1 * adj.m13, detO1 * adj.m14, detO1 * adj.m15, detO1 * adj.m16
 		};
 	}
 
 	Matrix4 Matrix4::Minor() const
 	{
+		// Supply each 3x3 determinant in column-major order so it lands in the correct member.
+		//   col0 -> m1, m2, m3, m4
+		//   col1 -> m5, m6, m7, m8
+		//   col2 -> m9, m10, m11, m12
+		//   col3 -> m13, m14, m15, m16
 		return
 		{
-			Matrix3{ m6, m7, m8, m10, m11, m12, m14, m15, m16 }.Determinant(),
-			Matrix3{ m2, m3, m4, m10, m11, m12, m14, m15, m16 }.Determinant(),
-			Matrix3{ m2, m3, m4, m6, m7, m8, m14, m15, m16 }.Determinant(),
-			Matrix3{ m2, m3, m4, m6, m7, m8, m10, m11, m12 }.Determinant(),
-			Matrix3{ m5, m7, m8, m9, m11, m12, m13, m15, m16 }.Determinant(),
-			Matrix3{ m1, m3, m4, m9, m11, m12, m13, m15, m16 }.Determinant(),
-			Matrix3{ m1, m3, m4, m5, m7, m8, m13, m15, m16 }.Determinant(),
-			Matrix3{ m1, m3, m4, m5, m7, m8, m9, m11, m12 }.Determinant(),
-			Matrix3{ m5, m6, m8, m9, m10, m12, m13, m14, m16 }.Determinant(),
-			Matrix3{ m1, m2, m4, m9, m11, m12, m13, m14, m16 }.Determinant(),
-			Matrix3{ m1, m5, m13, m2, m6, m14, m4, m8, m16 }.Determinant(),
-			Matrix3{ m1, m5, m9, m2, m6, m10, m4, m8, m12 }.Determinant(),
-			Matrix3{ m5, m6, m7, m9, m10, m11, m13, m14, m15 }.Determinant(),
-			Matrix3{ m1, m2, m3, m9, m10, m11, m13, m14, m15 }.Determinant(),
-			Matrix3{ m1, m5, m13, m2, m6, m14, m3, m7, m15 }.Determinant(),
-			Matrix3{ m1, m5, m9, m2, m6, m10, m3, m7, m11 }.Determinant(),
+			// col 0
+			Matrix3{ m6,  m7,  m8,  m10, m11, m12, m14, m15, m16 }.Determinant(),  // m1
+			Matrix3{ m5,  m7,  m8,  m9,  m11, m12, m13, m15, m16 }.Determinant(),  // m2
+			Matrix3{ m5,  m6,  m8,  m9,  m10, m12, m13, m14, m16 }.Determinant(),  // m3
+			Matrix3{ m5,  m6,  m7,  m9,  m10, m11, m13, m14, m15 }.Determinant(),  // m4
+			// col 1
+			Matrix3{ m2,  m3,  m4,  m10, m11, m12, m14, m15, m16 }.Determinant(),  // m5
+			Matrix3{ m1,  m3,  m4,  m9,  m11, m12, m13, m15, m16 }.Determinant(),  // m6
+			Matrix3{ m1,  m2,  m4,  m9,  m11, m12, m13, m14, m16 }.Determinant(),  // m7
+			Matrix3{ m1,  m2,  m3,  m9,  m10, m11, m13, m14, m15 }.Determinant(),  // m8
+			// col 2
+			Matrix3{ m2,  m3,  m4,  m6,  m7,  m8,  m14, m15, m16 }.Determinant(),  // m9
+			Matrix3{ m1,  m3,  m4,  m5,  m7,  m8,  m13, m15, m16 }.Determinant(),  // m10
+			Matrix3{ m1,  m5,  m13, m2,  m6,  m14, m4,  m8,  m16 }.Determinant(),  // m11
+			Matrix3{ m1,  m5,  m13, m2,  m6,  m14, m3,  m7,  m15 }.Determinant(),  // m12
+			// col 3
+			Matrix3{ m2,  m3,  m4,  m6,  m7,  m8,  m10, m11, m12 }.Determinant(),  // m13
+			Matrix3{ m1,  m3,  m4,  m5,  m7,  m8,  m9,  m11, m12 }.Determinant(),  // m14
+			Matrix3{ m1,  m5,  m9,  m2,  m6,  m10, m4,  m8,  m12 }.Determinant(),  // m15
+			Matrix3{ m1,  m5,  m9,  m2,  m6,  m10, m3,  m7,  m11 }.Determinant(),  // m16
 		};
 	}
 
 	Matrix4 Matrix4::Cofactor() const
 	{
-		// apply the checkerboard sign pattern (+ - + - / - + - + / + - + - / - + - +) to the minor matrix
+		// Apply the checkerboard sign pattern to the minor matrix,
+		// then supply results in column-major order.
+		//   Signs per member: m1+  m2-  m3+  m4-
+		//                     m5-  m6+  m7-  m8+
+		//                     m9+  m10- m11+ m12-
+		//                     m13- m14+ m15- m16+
 		const Matrix4 minor = Minor();
 		return
 		{
-			+minor.m1, -minor.m5, +minor.m9, -minor.m13,
-			-minor.m2, +minor.m6, -minor.m10, +minor.m14,
-			+minor.m3, -minor.m7, +minor.m11, -minor.m15,
-			-minor.m4, +minor.m8, -minor.m12, +minor.m16,
+			// col 0
+			+minor.m1,  -minor.m2,  +minor.m3,  -minor.m4,
+			// col 1
+			-minor.m5,  +minor.m6,  -minor.m7,  +minor.m8,
+			// col 2
+			+minor.m9,  -minor.m10, +minor.m11, -minor.m12,
+			// col 3
+			-minor.m13, +minor.m14, -minor.m15, +minor.m16,
 		};
 	}
 
@@ -598,37 +647,38 @@ namespace Catalyst::Math
 	{
 		return
 		{
-			m1 * rhs.x + m5 * rhs.y + m9 * rhs.z + m13 * rhs.w,
+			m1 * rhs.x + m5 * rhs.y + m9  * rhs.z + m13 * rhs.w,
 			m2 * rhs.x + m6 * rhs.y + m10 * rhs.z + m14 * rhs.w,
-			m3 * rhs.x + m7 * rhs.y + m11 * rhs.z + m16 * rhs.w,
+			m3 * rhs.x + m7 * rhs.y + m11 * rhs.z + m15 * rhs.w,
 			m4 * rhs.x + m8 * rhs.y + m12 * rhs.z + m16 * rhs.w,
 		};
 	}
 
 	Matrix4 Matrix4::operator*(const Matrix4& rhs) const
 	{
+		// Supply results in column-major order: col0 (m1..m4) first, then col1, col2, col3.
 		return
 		{
-			// Column 0 of result
-			m1 * rhs.m1 + m2 * rhs.m5 + m3 * rhs.m9 + m4 * rhs.m13,
-			m5 * rhs.m1 + m6 * rhs.m5 + m7 * rhs.m9 + m8 * rhs.m13,
-			m9 * rhs.m1 + m10 * rhs.m5 + m11 * rhs.m9 + m12 * rhs.m13,
-			m13 * rhs.m1 + m14 * rhs.m5 + m15 * rhs.m9 + m16 * rhs.m13,
-			// Column 1 of result
-			m1 * rhs.m2 + m2 * rhs.m6 + m3 * rhs.m10 + m4 * rhs.m14,
-			m5 * rhs.m2 + m6 * rhs.m6 + m7 * rhs.m10 + m8 * rhs.m14,
-			m9 * rhs.m2 + m10 * rhs.m6 + m11 * rhs.m10 + m12 * rhs.m14,
-			m13 * rhs.m2 + m14 * rhs.m6 + m15 * rhs.m10 + m16 * rhs.m14,
-			// Column 2 of result
-			m1 * rhs.m3 + m2 * rhs.m7 + m3 * rhs.m11 + m4 * rhs.m15,
-			m5 * rhs.m3 + m6 * rhs.m7 + m7 * rhs.m11 + m8 * rhs.m15,
-			m9 * rhs.m3 + m10 * rhs.m7 + m11 * rhs.m11 + m12 * rhs.m15,
-			m13 * rhs.m3 + m14 * rhs.m7 + m15 * rhs.m11 + m16 * rhs.m15,
-			// Column 3 of result
-			m1 * rhs.m4 + m2 * rhs.m8 + m3 * rhs.m12 + m4 * rhs.m16,
-			m5 * rhs.m4 + m6 * rhs.m8 + m7 * rhs.m12 + m8 * rhs.m16,
-			m9 * rhs.m4 + m10 * rhs.m8 + m11 * rhs.m12 + m12 * rhs.m16,
-			m13 * rhs.m4 + m14 * rhs.m8 + m15 * rhs.m12 + m16 * rhs.m16
+			// col 0 of result (m1, m2, m3, m4)
+			m1 * rhs.m1 + m5 * rhs.m2 + m9  * rhs.m3 + m13 * rhs.m4,
+			m2 * rhs.m1 + m6 * rhs.m2 + m10 * rhs.m3 + m14 * rhs.m4,
+			m3 * rhs.m1 + m7 * rhs.m2 + m11 * rhs.m3 + m15 * rhs.m4,
+			m4 * rhs.m1 + m8 * rhs.m2 + m12 * rhs.m3 + m16 * rhs.m4,
+			// col 1 of result (m5, m6, m7, m8)
+			m1 * rhs.m5 + m5 * rhs.m6 + m9  * rhs.m7 + m13 * rhs.m8,
+			m2 * rhs.m5 + m6 * rhs.m6 + m10 * rhs.m7 + m14 * rhs.m8,
+			m3 * rhs.m5 + m7 * rhs.m6 + m11 * rhs.m7 + m15 * rhs.m8,
+			m4 * rhs.m5 + m8 * rhs.m6 + m12 * rhs.m7 + m16 * rhs.m8,
+			// col 2 of result (m9, m10, m11, m12)
+			m1 * rhs.m9 + m5 * rhs.m10 + m9  * rhs.m11 + m13 * rhs.m12,
+			m2 * rhs.m9 + m6 * rhs.m10 + m10 * rhs.m11 + m14 * rhs.m12,
+			m3 * rhs.m9 + m7 * rhs.m10 + m11 * rhs.m11 + m15 * rhs.m12,
+			m4 * rhs.m9 + m8 * rhs.m10 + m12 * rhs.m11 + m16 * rhs.m12,
+			// col 3 of result (m13, m14, m15, m16)
+			m1 * rhs.m13 + m5 * rhs.m14 + m9  * rhs.m15 + m13 * rhs.m16,
+			m2 * rhs.m13 + m6 * rhs.m14 + m10 * rhs.m15 + m14 * rhs.m16,
+			m3 * rhs.m13 + m7 * rhs.m14 + m11 * rhs.m15 + m15 * rhs.m16,
+			m4 * rhs.m13 + m8 * rhs.m14 + m12 * rhs.m15 + m16 * rhs.m16
 		};
 	}
 
